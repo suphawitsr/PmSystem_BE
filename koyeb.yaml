@@ -1,0 +1,31 @@
+name: pm-backend
+app: pm-system
+
+build:
+  type: node
+  command: npm install && npm run build
+
+start:
+  command: npm run start:prod
+
+env:
+  - name: NODE_ENV
+    value: production
+  - name: PORT
+    value: 8080
+  - name: DATABASE_URL
+    fromDatabase:
+      name: pm-db
+      property: connectionString
+  - name: JWT_SECRET
+    generate: true
+
+ports:
+  - port: 8080
+    protocol: http
+    expose: true
+
+healthcheck:
+  http:
+    path: /
+    port: 8080
