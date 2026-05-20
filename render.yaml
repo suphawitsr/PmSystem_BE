@@ -1,0 +1,53 @@
+services:
+  - type: web
+    name: pm-backend
+    runtime: node
+    buildCommand: npm install && npm run build
+    startCommand: npm run start:prod
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: DB_HOST
+        fromDatabase:
+          name: pm-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: pm-db
+          property: port
+      - key: DB_USERNAME
+        fromDatabase:
+          name: pm-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: pm-db
+          property: password
+      - key: DB_NAME
+        fromDatabase:
+          name: pm-db
+          property: database
+      - key: JWT_SECRET
+        generateValue: true
+    healthCheckPath: /
+
+  - type: pserv
+    name: pm-db
+    runtime: docker
+    image: postgres:15
+    dockerCommand: postgres -c listen_addresses='*'
+    envVars:
+      - key: POSTGRES_USER
+        value: admin
+      - key: POSTGRES_PASSWORD
+        generateValue: true
+      - key: POSTGRES_DB
+        value: pm_db
+      - key: PGDATA
+        value: /var/lib/postgresql/data/pgdata
+    disk:
+      name: postgres-data
+      mountPath: /var/lib/postgresql/data
+      sizeGB: 1
