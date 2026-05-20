@@ -2,7 +2,7 @@ services:
   - type: web
     name: pm-backend
     runtime: node
-    buildCommand: npm install && npx nest build
+    buildCommand: npm install && npm run build
     startCommand: npm run start:prod
     envVars:
       - key: NODE_ENV
