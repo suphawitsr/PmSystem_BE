@@ -5,7 +5,7 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Enable CORS for Koyeb + Vercel
+  // Enable CORS for Render + Vercel
   app.enableCors({
     origin: true,
     credentials: true,
