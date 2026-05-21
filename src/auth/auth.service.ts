@@ -28,7 +28,7 @@ export class AuthService {
       name: registerDto.name,
       username: registerDto.username,
       passwordHash,
-      role: registerDto.role || UserRole.STAFF,
+      role: registerDto.role || UserRole.ADMIN,
     });
 
     await this.usersRepository.save(user);
