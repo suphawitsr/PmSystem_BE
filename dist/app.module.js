@@ -21,6 +21,7 @@ const equipment_entity_1 = require("./equipment/entities/equipment.entity");
 const pm_record_entity_1 = require("./pm-record/entities/pm-record.entity");
 const alert_entity_1 = require("./alert/entities/alert.entity");
 const auth_module_1 = require("./auth/auth.module");
+const initial_admin_seed_1 = require("./database/seeds/initial-admin.seed");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -32,6 +33,7 @@ exports.AppModule = AppModule = __decorate([
             }),
             typeorm_1.TypeOrmModule.forRoot({
                 type: 'postgres',
+                url: process.env.DATABASE_URL,
                 host: process.env.DB_HOST || 'localhost',
                 port: parseInt(process.env.DB_PORT || '5432', 10),
                 username: process.env.DB_USERNAME || 'admin',
@@ -39,6 +41,7 @@ exports.AppModule = AppModule = __decorate([
                 database: process.env.DB_NAME || 'pm_db',
                 entities: [user_entity_1.User, equipment_entity_1.Equipment, pm_record_entity_1.PmRecord, alert_entity_1.Alert],
                 synchronize: true,
+                ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false,
             }),
             equipment_module_1.EquipmentModule,
             user_module_1.UserModule,
@@ -47,7 +50,7 @@ exports.AppModule = AppModule = __decorate([
             auth_module_1.AuthModule,
         ],
         controllers: [app_controller_1.AppController],
-        providers: [app_service_1.AppService],
+        providers: [app_service_1.AppService, initial_admin_seed_1.InitialAdminSeed],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map
