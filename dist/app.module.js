@@ -28,6 +28,7 @@ exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
+            typeorm_1.TypeOrmModule.forFeature([user_entity_1.User]),
             config_1.ConfigModule.forRoot({
                 isGlobal: true,
             }),
