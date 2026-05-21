@@ -16,6 +16,7 @@ import { InitialAdminSeed } from './database/seeds/initial-admin.seed';
 
 @Module({
   imports: [
+    TypeOrmModule.forFeature([User]),
     ConfigModule.forRoot({
       isGlobal: true,
     }),
