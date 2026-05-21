@@ -44,6 +44,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var InitialAdminSeed_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.InitialAdminSeed = void 0;
 const common_1 = require("@nestjs/common");
@@ -51,36 +52,63 @@ const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const bcrypt = __importStar(require("bcrypt"));
 const user_entity_1 = require("../../user/entities/user.entity");
-let InitialAdminSeed = class InitialAdminSeed {
+let InitialAdminSeed = InitialAdminSeed_1 = class InitialAdminSeed {
     usersRepository;
-    constructor(usersRepository) {
+    dataSource;
+    logger = new common_1.Logger(InitialAdminSeed_1.name);
+    constructor(usersRepository, dataSource) {
         this.usersRepository = usersRepository;
+        this.dataSource = dataSource;
     }
     async onModuleInit() {
+        await this.waitForDatabase();
         await this.seedInitialAdmin();
     }
+    async waitForDatabase(maxRetries = 10) {
+        for (let i = 0; i < maxRetries; i++) {
+            try {
+                await this.dataSource.query('SELECT 1');
+                this.logger.log('Database connection ready');
+                return;
+            }
+            catch (error) {
+                this.logger.warn(`Database not ready, retry ${i + 1}/${maxRetries}...`);
+                await new Promise(resolve => setTimeout(resolve, 2000));
+            }
+        }
+        throw new Error('Database connection failed after max retries');
+    }
     async seedInitialAdmin() {
-        const adminExists = await this.usersRepository.findOne({
-            where: { role: user_entity_1.UserRole.ADMIN },
-        });
-        if (!adminExists) {
-            const salt = await bcrypt.genSalt();
-            const passwordHash = await bcrypt.hash('admin123', salt);
-            const admin = this.usersRepository.create({
-                name: 'System Administrator',
-                username: 'admin',
-                passwordHash,
-                role: user_entity_1.UserRole.ADMIN,
+        try {
+            const adminExists = await this.usersRepository.findOne({
+                where: { role: user_entity_1.UserRole.ADMIN },
             });
-            await this.usersRepository.save(admin);
-            console.log('Initial admin user created: username=admin, password=admin123');
+            if (!adminExists) {
+                const salt = await bcrypt.genSalt();
+                const passwordHash = await bcrypt.hash('admin123', salt);
+                const admin = this.usersRepository.create({
+                    name: 'System Administrator',
+                    username: 'admin',
+                    passwordHash,
+                    role: user_entity_1.UserRole.ADMIN,
+                });
+                await this.usersRepository.save(admin);
+                this.logger.log('Initial admin user created: username=admin, password=admin123');
+            }
+            else {
+                this.logger.log('Admin user already exists');
+            }
+        }
+        catch (error) {
+            this.logger.error('Failed to seed admin:', error.message);
         }
     }
 };
 exports.InitialAdminSeed = InitialAdminSeed;
-exports.InitialAdminSeed = InitialAdminSeed = __decorate([
+exports.InitialAdminSeed = InitialAdminSeed = InitialAdminSeed_1 = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(user_entity_1.User)),
-    __metadata("design:paramtypes", [typeorm_2.Repository])
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        typeorm_2.DataSource])
 ], InitialAdminSeed);
 //# sourceMappingURL=initial-admin.seed.js.map
