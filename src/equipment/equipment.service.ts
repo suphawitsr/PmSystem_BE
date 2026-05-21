@@ -16,7 +16,7 @@ export class EquipmentService {
     const nextDate = new Date(lastPmDate);
     if (group === EquipmentGroup.PRINTER || group === EquipmentGroup.NETWORK) {
       nextDate.setMonth(nextDate.getMonth() + 3);
-    } else if (group === EquipmentGroup.PC) {
+    } else if (group === EquipmentGroup.COMPUTER) {
       nextDate.setMonth(nextDate.getMonth() + 6);
     }
     return nextDate;

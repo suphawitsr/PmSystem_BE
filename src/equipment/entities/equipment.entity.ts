@@ -4,7 +4,7 @@ import { User } from '../../user/entities/user.entity';
 export enum EquipmentGroup {
   PRINTER = 'PRINTER',
   NETWORK = 'NETWORK',
-  PC = 'PC',
+  COMPUTER = 'COMPUTER',
 }
 
 @Entity()

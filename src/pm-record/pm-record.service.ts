@@ -18,7 +18,7 @@ export class PmRecordService {
 
   private calculateCost(group: EquipmentGroup): number {
     switch (group) {
-      case EquipmentGroup.PC:
+      case EquipmentGroup.COMPUTER:
         return 500;
       case EquipmentGroup.PRINTER:
         return 300;
