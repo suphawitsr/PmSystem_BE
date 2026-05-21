@@ -12,6 +12,7 @@ import { Equipment } from './equipment/entities/equipment.entity';
 import { PmRecord } from './pm-record/entities/pm-record.entity';
 import { Alert } from './alert/entities/alert.entity';
 import { AuthModule } from './auth/auth.module';
+import { InitialAdminSeed } from './database/seeds/initial-admin.seed';
 
 @Module({
   imports: [
@@ -37,6 +38,6 @@ import { AuthModule } from './auth/auth.module';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, InitialAdminSeed],
 })
 export class AppModule {}
