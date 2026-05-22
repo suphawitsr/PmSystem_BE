@@ -36,6 +36,9 @@ export class Equipment {
   @Column()
   zoneCode: string;
 
+  @Column({ type: 'text', nullable: true })
+  textLog: string | null;
+
   @Column({ type: 'date', nullable: true })
   lastPmDate: Date;
 

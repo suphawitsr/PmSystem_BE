@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsOptional, IsString, IsDateString, IsUUID } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional, IsString, IsDateString } from 'class-validator';
 import { EquipmentGroup } from '../entities/equipment.entity';
 
 export class CreateEquipmentDto {
@@ -28,6 +28,10 @@ export class CreateEquipmentDto {
   @IsString()
   @IsNotEmpty()
   zoneCode: string;
+
+  @IsOptional()
+  @IsString()
+  textLog?: string | null;
 
   @IsOptional()
   @IsDateString()
